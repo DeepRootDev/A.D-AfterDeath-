@@ -2,8 +2,6 @@
 #include "MyCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SphereComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
@@ -39,9 +37,6 @@ AMyCharacter::AMyCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
-	AttackSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AttackSphere"));
-	AttackSphere->SetupAttachment(RootComponent);
 }
 
 void AMyCharacter::MoveForward(float Value)
@@ -78,8 +73,6 @@ void AMyCharacter::MoveRight(float Value)
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//AttackSphere->OnComponentBeginOverlap.AddDynamic(this, &AMyCharacter::meleeHit);
 }
 
 void AMyCharacter::TurnAtRate(float Rate)
@@ -98,16 +91,6 @@ void AMyCharacter::LookUpAtRate(float Rate)
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (timer != 0)
-	{
-		timer = timer - 1;
-		this->AttackSphere->SetVisibility(true);
-	}
-	else
-	{
-		this->AttackSphere->SetVisibility(false);
-	}
 }
 
 // Called to bind functionality to input
@@ -118,7 +101,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAction("Melee", IE_Pressed, this, &AMyCharacter::melee);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
@@ -132,17 +114,3 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMyCharacter::LookUpAtRate);
 }
 
-void AMyCharacter::melee()
-{
-	
-	if (timer == 0)
-	{
-		timer = 100;
-	}
-
-
-}
-
-void AMyCharacter::meleeHit()
-{
-}
