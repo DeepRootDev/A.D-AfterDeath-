@@ -20,6 +20,16 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
+	UPROPERTY(EditAnywhere, Category = AttackBox, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* AttackSphere;
+
+	void melee();
+
+	void meleeHit();
+
+	UPROPERTY(EditAnywhere, Category = AttackTimer, meta = (AllowPrivateAccess = "true"))
+	int timer = 0;
+
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
