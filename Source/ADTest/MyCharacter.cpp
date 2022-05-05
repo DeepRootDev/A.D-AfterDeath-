@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "MyProjectile.h"
+#include "ScreenHUD.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -54,11 +55,44 @@ void AMyCharacter::Shoot()
 {
 	if (spawnedProjectile)
 	{
+		//spawnedProjectile->setSpeed(5000.f);
+		//SetActorRotation({ 0.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
 		GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, HitDetect->GetComponentLocation(), { 0.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
 		spawnedProjectile->Destroy();
 	}
+	
 }
-
+void AMyCharacter::attackForm()
+{
+	if (screenHUD)
+	{
+		screenHUD->UpdateForm(0);
+	}
+}
+void AMyCharacter::defenseForm()
+{
+	if (screenHUD)
+	{
+		screenHUD->UpdateForm(1);
+	}
+}
+void AMyCharacter::flightForm()
+{
+	if (screenHUD)
+	{
+		screenHUD->UpdateForm(2);
+	}
+}
+void AMyCharacter::counterForm()
+{
+	if (screenHUD)
+	{
+		screenHUD->UpdateForm(3);
+	}
+}
+void AMyCharacter::Block()
+{
+}
 void AMyCharacter::updateRockState()
 {
 
@@ -66,6 +100,7 @@ void AMyCharacter::updateRockState()
 	{
 	case 0:
 		spawnedProjectile = GetWorld()->SpawnActor<AMyProjectile>(throwableProjectile, HitDetect->GetComponentLocation(), FollowCamera->GetComponentRotation());
+		//spawnedProjectile->setSpeed(0.f);
 		rockState = 1;
 		break;
 	case 1:
@@ -109,6 +144,13 @@ void AMyCharacter::MoveRight(float Value)
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	screenHUD = Cast<AScreenHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	if (screenHUD)
+	{
+		screenHUD->UpdateForm(0);
+	}
 }
 
 void AMyCharacter::TurnAtRate(float Rate)
@@ -156,6 +198,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::updateRockState);
 
+	PlayerInputComponent->BindAction("Attack Form", IE_Pressed, this, &AMyCharacter::attackForm);
+	PlayerInputComponent->BindAction("Defense Form", IE_Pressed, this, &AMyCharacter::defenseForm);
+	PlayerInputComponent->BindAction("Flight Form", IE_Pressed, this, &AMyCharacter::flightForm);
+	PlayerInputComponent->BindAction("Counter Form", IE_Pressed, this, &AMyCharacter::counterForm);
+	PlayerInputComponent->BindAction("Block", IE_Pressed, this, &AMyCharacter::Block);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);

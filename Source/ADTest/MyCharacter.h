@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "ScreenHUD.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -44,9 +45,22 @@ public:
 
 	void Shoot();
 
+	void attackForm();
+	
+	void defenseForm();
+	
+	void flightForm();
+
+	void counterForm();
+
+	void Block();
+
 	void updateRockState();
 
 	int rockState = 0;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+		TSubclassOf<class AHUD> menuHUD;
 
 public:
 	// Sets default values for this character's properties
@@ -55,6 +69,8 @@ public:
 private:
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
+
+	class AScreenHUD* screenHUD;
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
