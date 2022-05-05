@@ -3,10 +3,13 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "MyProjectile.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -15,6 +18,10 @@ AMyCharacter::AMyCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+
+	HitDetect = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hit Detect"));
+	HitDetect->SetupAttachment(RootComponent);
+
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -37,6 +44,35 @@ AMyCharacter::AMyCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+}
+
+void AMyCharacter::lift()
+{
+}
+
+void AMyCharacter::Shoot()
+{
+	if (spawnedProjectile)
+	{
+		GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, HitDetect->GetComponentLocation(), { 0.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
+		spawnedProjectile->Destroy();
+	}
+}
+
+void AMyCharacter::updateRockState()
+{
+
+	switch (rockState)
+	{
+	case 0:
+		spawnedProjectile = GetWorld()->SpawnActor<AMyProjectile>(throwableProjectile, HitDetect->GetComponentLocation(), FollowCamera->GetComponentRotation());
+		rockState = 1;
+		break;
+	case 1:
+		Shoot();
+		rockState = 0;
+		break;
+	}
 }
 
 void AMyCharacter::MoveForward(float Value)
@@ -91,6 +127,23 @@ void AMyCharacter::LookUpAtRate(float Rate)
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AMyProjectile* spawnedProj = Cast<AMyProjectile>(throwableProjectile);
+
+	switch (rockState)
+	{
+	case 0:
+		
+		
+		break;
+	case 1:
+		if (spawnedProjectile)
+		{
+			spawnedProjectile->SetActorLocation(HitDetect->GetComponentLocation());
+		}
+		
+		break;
+	}
+
 }
 
 // Called to bind functionality to input
@@ -101,6 +154,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::updateRockState);
+
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);

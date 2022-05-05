@@ -29,6 +29,25 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* HitDetect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<class AMyProjectile> throwableProjectile;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<class AMyProjectile> actualProjectile;
+
+	class AMyProjectile* spawnedProjectile;
+
+	void lift();
+
+	void Shoot();
+
+	void updateRockState();
+
+	int rockState = 0;
+
 public:
 	// Sets default values for this character's properties
 	AMyCharacter();

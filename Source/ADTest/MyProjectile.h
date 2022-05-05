@@ -15,6 +15,12 @@ public:
 	// Sets default values for this actor's properties
 	AMyProjectile();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* projectileMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Components")
+		class UProjectileMovementComponent* ProjectileMovement;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
