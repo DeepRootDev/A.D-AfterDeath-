@@ -23,6 +23,15 @@ AMyCharacter::AMyCharacter()
 	HitDetect = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hit Detect"));
 	HitDetect->SetupAttachment(RootComponent);
 
+	Quad1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 1"));
+	Quad2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 2"));
+	Quad3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 3"));
+	Quad4 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 4"));
+
+	Quad1->SetupAttachment(RootComponent);
+	Quad2->SetupAttachment(RootComponent);
+	Quad3->SetupAttachment(RootComponent);
+	Quad4->SetupAttachment(RootComponent);
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -145,6 +154,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Quad1->SetRelativeLocation(FVector(0.f, quad1Dist, 0.f));
 	screenHUD = Cast<AScreenHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
 	if (screenHUD)
