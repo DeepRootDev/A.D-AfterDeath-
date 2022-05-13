@@ -28,10 +28,21 @@ AMyCharacter::AMyCharacter()
 	Quad3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 3"));
 	Quad4 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 4"));
 
+	Quad1AnimPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 1 Anim Point"));
+	Quad2AnimPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 2 Anim Point"));
+	Quad3AnimPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 3 Anim Point"));
+	Quad4AnimPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 4 Anim Point"));
+
+
 	Quad1->SetupAttachment(RootComponent);
 	Quad2->SetupAttachment(RootComponent);
 	Quad3->SetupAttachment(RootComponent);
 	Quad4->SetupAttachment(RootComponent);
+
+	Quad1AnimPoint->SetupAttachment(RootComponent);
+	Quad2AnimPoint->SetupAttachment(RootComponent);
+	Quad3AnimPoint->SetupAttachment(RootComponent);
+	Quad4AnimPoint->SetupAttachment(RootComponent);
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -62,13 +73,13 @@ void AMyCharacter::lift()
 
 void AMyCharacter::Shoot()
 {
-	if (spawnedProjectile)
-	{
+	
 		//spawnedProjectile->setSpeed(5000.f);
 		//SetActorRotation({ 0.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
-		GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, HitDetect->GetComponentLocation(), { 0.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
-		spawnedProjectile->Destroy();
-	}
+		GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad2->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
+		GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad3->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
+		//spawnedProjectile->Destroy();
+	
 	
 }
 void AMyCharacter::attackForm()
@@ -108,7 +119,7 @@ void AMyCharacter::updateRockState()
 	switch (rockState)
 	{
 	case 0:
-		spawnedProjectile = GetWorld()->SpawnActor<AMyProjectile>(throwableProjectile, HitDetect->GetComponentLocation(), FollowCamera->GetComponentRotation());
+		//spawnedProjectile = GetWorld()->SpawnActor<AMyProjectile>(throwableProjectile, HitDetect->GetComponentLocation(), FollowCamera->GetComponentRotation());
 		//spawnedProjectile->setSpeed(0.f);
 		rockState = 1;
 		break;
@@ -154,7 +165,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Quad1->SetRelativeLocation(FVector(0.f, quad1Dist, 0.f));
+	
 	screenHUD = Cast<AScreenHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
 	if (screenHUD)
@@ -188,10 +199,10 @@ void AMyCharacter::Tick(float DeltaTime)
 		
 		break;
 	case 1:
-		if (spawnedProjectile)
+		/*if (spawnedProjectile)
 		{
 			spawnedProjectile->SetActorLocation(HitDetect->GetComponentLocation());
-		}
+		}*/
 		
 		break;
 	}
@@ -206,7 +217,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::updateRockState);
+	PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::Shoot);
 
 	PlayerInputComponent->BindAction("Attack Form", IE_Pressed, this, &AMyCharacter::attackForm);
 	PlayerInputComponent->BindAction("Defense Form", IE_Pressed, this, &AMyCharacter::defenseForm);

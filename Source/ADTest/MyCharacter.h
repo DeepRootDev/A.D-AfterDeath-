@@ -43,13 +43,25 @@ public:
 		class UStaticMeshComponent* Quad1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad1AnimPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad2AnimPoint;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad3;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad3AnimPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad4;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad4AnimPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		float allQuadDist = 0.f;
@@ -66,7 +78,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		float quad4Dist = 0.f;
 
-	class AMyProjectile* spawnedProjectile;
+	class AMyProjectile* quad1Projectile;
+	class AMyProjectile* quad2Projectile;
+	class AMyProjectile* quad3Projectile;
+	class AMyProjectile* quad4Projectile;
 
 	void lift();
 
