@@ -8,8 +8,12 @@
 #include "GameFramework/Controller.h"
 #include "MyProjectile.h"
 #include "ScreenHUD.h"
+#include "Engine/DataAsset.h"
+#include "MyCardActor.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+
 
 
 // Sets default values
@@ -33,6 +37,10 @@ AMyCharacter::AMyCharacter()
 	Quad3AnimPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 3 Anim Point"));
 	Quad4AnimPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 4 Anim Point"));
 
+	Quad1Plane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 1 Plane"));
+	Quad2Plane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 2 Plane"));
+	Quad3Plane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 3 Plane"));
+	Quad4Plane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Quad 4 Plane"));
 
 	Quad1->SetupAttachment(RootComponent);
 	Quad2->SetupAttachment(RootComponent);
@@ -43,6 +51,11 @@ AMyCharacter::AMyCharacter()
 	Quad2AnimPoint->SetupAttachment(RootComponent);
 	Quad3AnimPoint->SetupAttachment(RootComponent);
 	Quad4AnimPoint->SetupAttachment(RootComponent);
+
+	Quad1Plane->SetupAttachment(RootComponent);
+	Quad2Plane->SetupAttachment(RootComponent);
+	Quad3Plane->SetupAttachment(RootComponent);
+	Quad4Plane->SetupAttachment(RootComponent);
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -66,7 +79,12 @@ AMyCharacter::AMyCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 }
-
+void AMyCharacter::updateShooting()
+{
+	
+	isShooting = true;
+	
+}
 void AMyCharacter::lift()
 {
 }
@@ -76,8 +94,29 @@ void AMyCharacter::Shoot()
 	
 		//spawnedProjectile->setSpeed(5000.f);
 		//SetActorRotation({ 0.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
-		GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad2->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
-		GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad3->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
+
+
+	
+		UE_LOG(LogTemp, Warning, TEXT("Cast is successful??"));
+		if (currentOffenseCard->quad1Spawn == true)
+		{
+			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad1->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
+		}
+		if (currentOffenseCard->quad2Spawn == true)
+		{
+			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad2->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
+		}
+		if (currentOffenseCard->quad3Spawn == true)
+		{
+			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad3->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
+		}
+		if (currentOffenseCard->quad4Spawn == true)
+		{
+			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad4->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
+		}
+	
+		
+		
 		//spawnedProjectile->Destroy();
 	
 	
@@ -88,6 +127,7 @@ void AMyCharacter::attackForm()
 	{
 		screenHUD->UpdateForm(0);
 	}
+	currentForm = 0;
 }
 void AMyCharacter::defenseForm()
 {
@@ -95,6 +135,7 @@ void AMyCharacter::defenseForm()
 	{
 		screenHUD->UpdateForm(1);
 	}
+	currentForm = 1;
 }
 void AMyCharacter::flightForm()
 {
@@ -102,6 +143,7 @@ void AMyCharacter::flightForm()
 	{
 		screenHUD->UpdateForm(2);
 	}
+	currentForm = 2;
 }
 void AMyCharacter::counterForm()
 {
@@ -109,6 +151,7 @@ void AMyCharacter::counterForm()
 	{
 		screenHUD->UpdateForm(3);
 	}
+	currentForm = 3;
 }
 void AMyCharacter::Block()
 {
@@ -165,13 +208,14 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
 	screenHUD = Cast<AScreenHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
 	if (screenHUD)
 	{
 		screenHUD->UpdateForm(0);
 	}
+
+	
 }
 
 void AMyCharacter::TurnAtRate(float Rate)
@@ -192,21 +236,49 @@ void AMyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	AMyProjectile* spawnedProj = Cast<AMyProjectile>(throwableProjectile);
 
-	switch (rockState)
+	if (isShooting == true)
 	{
-	case 0:
-		
-		
-		break;
-	case 1:
-		/*if (spawnedProjectile)
+		if (currentForm == 0)
 		{
-			spawnedProjectile->SetActorLocation(HitDetect->GetComponentLocation());
-		}*/
-		
-		break;
-	}
 
+			if (currentOffenseCard->symbolTime > 0.f)
+			{
+				
+				if (maxActionTimer > 0.f)
+				{
+					currentActionTimer += DeltaTime;
+					if (currentActionTimer >= maxActionTimer)
+					{
+						currentActionTimer = 0.f;
+						maxActionTimer = 0.f;
+						Shoot();
+						isShooting = false;
+					}
+				}
+				else
+				{
+					maxActionTimer = currentOffenseCard->symbolTime;
+					Quad1Plane->SetHiddenInGame(!currentOffenseCard->quad1Spawn);
+					Quad2Plane->SetHiddenInGame(!currentOffenseCard->quad2Spawn);
+					Quad3Plane->SetHiddenInGame(!currentOffenseCard->quad3Spawn);
+					Quad4Plane->SetHiddenInGame(!currentOffenseCard->quad4Spawn);
+				}
+			}
+			else
+			{
+				Shoot();
+				isShooting = false;
+			}
+			
+		}
+	}
+	else
+	{
+		Quad1Plane->SetHiddenInGame(true);
+		Quad2Plane->SetHiddenInGame(true);
+		Quad3Plane->SetHiddenInGame(true);
+		Quad4Plane->SetHiddenInGame(true);
+	}
 }
 
 // Called to bind functionality to input
@@ -217,7 +289,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::Shoot);
+	PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::updateShooting);
 
 	PlayerInputComponent->BindAction("Attack Form", IE_Pressed, this, &AMyCharacter::attackForm);
 	PlayerInputComponent->BindAction("Defense Form", IE_Pressed, this, &AMyCharacter::defenseForm);

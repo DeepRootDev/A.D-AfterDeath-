@@ -1,12 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestCard.h"
+#include "MyMyDataAsset.h"
 
-TestCard::TestCard()
-{
-}
-
-TestCard::~TestCard()
-{
-}

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "ScreenHUD.h"
+#include "MyDataAsset.h"
+#include "Card.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -22,6 +24,9 @@ private:
 		class UCameraComponent* FollowCamera;
 
 public:
+
+	
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate;
@@ -36,6 +41,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<class AMyProjectile> throwableProjectile;
 
+	UPROPERTY(EditAnywhere)
+		UCard* currentOffenseCard;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<class AMyProjectile> actualProjectile;
 
@@ -46,10 +54,16 @@ public:
 		class UStaticMeshComponent* Quad1AnimPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad1Plane;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad2AnimPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad2Plane;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad3;
@@ -58,10 +72,16 @@ public:
 		class UStaticMeshComponent* Quad3AnimPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad3Plane;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad4;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Quad4AnimPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* Quad4Plane;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		float allQuadDist = 0.f;
@@ -100,6 +120,16 @@ public:
 	void updateRockState();
 
 	int rockState = 0;
+
+	int currentForm = 0;
+
+	float currentActionTimer = 0.f;
+
+	float maxActionTimer = 0.f;
+
+	bool isShooting = false;
+
+	void updateShooting();
 
 	UPROPERTY(EditAnywhere, Category = "HUD")
 		TSubclassOf<class AHUD> menuHUD;

@@ -25,7 +25,7 @@ public:
 		class UProjectileMovementComponent* ProjectileMovement;
 
 	UFUNCTION()
-		void setSpeed(float value);
+		void setSpeed(float initial, float max);
 
 protected:
 	// Called when the game starts or when spawned

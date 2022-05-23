@@ -22,9 +22,10 @@ AMyProjectile::AMyProjectile()
 	ProjectileMovement->MaxSpeed = 5000.0f;
 }
 
-void AMyProjectile::setSpeed(float value)
+void AMyProjectile::setSpeed(float initial, float max)
 {
-	ProjectileMovement->InitialSpeed = value;
+	ProjectileMovement->InitialSpeed = initial;
+	ProjectileMovement->MaxSpeed = max;
 }
 
 // Called when the game starts or when spawned
