@@ -37,5 +37,29 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ProjectileProperties", meta = (AllowPrivateAccess = "true"))
 		float maxSpeed = 0.f;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 1", meta = (AllowPrivateAccess = "true"))
+		bool input1L = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 1", meta = (AllowPrivateAccess = "true"))
+		bool input1R = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 2", meta = (AllowPrivateAccess = "true"))
+		bool input2L = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 2", meta = (AllowPrivateAccess = "true"))
+		bool input2R = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 3", meta = (AllowPrivateAccess = "true"))
+		bool input3L = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 3", meta = (AllowPrivateAccess = "true"))
+		bool input3R = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 4", meta = (AllowPrivateAccess = "true"))
+		bool input4L = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 4", meta = (AllowPrivateAccess = "true"))
+		bool input4R = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 5", meta = (AllowPrivateAccess = "true"))
+		bool input5L = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo Input 5", meta = (AllowPrivateAccess = "true"))
+		bool input5R = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input Number", meta = (AllowPrivateAccess = "true"))
+		int inputNum = 0;
+
+	//int comboInputs[10] = {input1L, input1R, input2L, input2R, input3L, input3R, input4L, input4R, input5L, input5R};
 };

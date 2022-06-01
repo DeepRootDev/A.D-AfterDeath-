@@ -23,6 +23,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
+	char inputList[5];
+
 public:
 
 	
@@ -98,6 +100,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		float quad4Dist = 0.f;
 
+	float inputResetTimerCurrent = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+		float inputResetTimer = 5.f;
+
 	class AMyProjectile* quad1Projectile;
 	class AMyProjectile* quad2Projectile;
 	class AMyProjectile* quad3Projectile;
@@ -106,6 +113,14 @@ public:
 	void lift();
 
 	void Shoot();
+
+	void addLeftInput();
+	
+	void addRightInput();
+
+	void checkCombo();
+
+	void clearInputList();
 
 	void attackForm();
 	

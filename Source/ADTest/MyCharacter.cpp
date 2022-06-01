@@ -24,6 +24,11 @@ AMyCharacter::AMyCharacter()
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
+	for (int i = 0; i < 5; i++)
+	{
+		inputList[i] = '\0';
+	}
+
 	HitDetect = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hit Detect"));
 	HitDetect->SetupAttachment(RootComponent);
 
@@ -102,6 +107,7 @@ void AMyCharacter::Shoot()
 		{
 			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad1->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
 		}
+		
 		if (currentOffenseCard->quad2Spawn == true)
 		{
 			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad2->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
@@ -120,6 +126,209 @@ void AMyCharacter::Shoot()
 		//spawnedProjectile->Destroy();
 	
 	
+
+}
+void AMyCharacter::addLeftInput()
+{
+	int count = 0;
+
+	while (count < 5)
+	{
+		if (inputList[count] == '\0')
+		{
+			inputList[count] = 'L';
+			UE_LOG(LogTemp, Warning, TEXT("Added Left Input"));
+			UE_LOG(LogTemp, Warning, TEXT("Input list currently %c %c %c %c %c"), inputList[0], inputList[1], inputList[2], inputList[3], inputList[4]);
+			count = 5;
+		}
+		else
+		{
+			count += 1;
+		}
+	}
+}
+void AMyCharacter::addRightInput()
+{
+	int count = 0;
+
+	while (count < 5)
+	{
+		if (inputList[count] == '\0')
+		{
+			inputList[count] = 'R';
+			UE_LOG(LogTemp, Warning, TEXT("Added Right Input"));
+			UE_LOG(LogTemp, Warning, TEXT("Input list currently %c %c %c %c %c"), inputList[0], inputList[1], inputList[2], inputList[3], inputList[4]);
+			count = 5;
+		}
+		else
+		{
+			count += 1;
+		}
+	}
+}
+void AMyCharacter::checkCombo()
+{
+	
+	int comboMatch[5] = { 0, 0, 0, 0, 0 };
+	bool combo1Match = false;
+	bool combo2Match = false;
+	bool combo3Match = false;
+	bool combo4Match = false;
+	bool combo5Match = false;
+	int executeCombo = 1;
+	int maxComboInputs = 0;
+
+	if (currentOffenseCard->input1L == true)
+	{
+		if (inputList[0] == 'L')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo1Match = true;
+		}
+		
+	}
+	
+
+	if (currentOffenseCard->input1R == true)
+	{
+		if (inputList[0] == 'R')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo1Match = true;
+		}
+		
+	}
+	
+	if (currentOffenseCard->input2L == true)
+	{
+		if (inputList[1] == 'L')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo2Match = true;
+		}
+		
+	}
+	
+	if (currentOffenseCard->input2R == true)
+	{
+		if (inputList[1] == 'R')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo2Match = true;
+		}
+		
+	}
+	
+	if (currentOffenseCard->input3L == true)
+	{
+		if (inputList[2] == 'L')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo3Match = true;
+		}
+		
+	}
+	
+	if (currentOffenseCard->input3R == true)
+	{
+		if (inputList[2] == 'R')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo3Match = true;
+		}
+		
+	}
+	
+	if (currentOffenseCard->input4L == true)
+	{
+		if (inputList[3] == 'L')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo4Match = true;
+		}
+		
+	}
+	
+	if (currentOffenseCard->input4R == true)
+	{
+		if (inputList[3] == 'R')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo4Match = true;
+		}
+		
+	}
+	
+	if (currentOffenseCard->input5L == true)
+	{
+		if (inputList[4] == 'L')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo5Match = true;
+		}
+	
+	}
+
+	if (currentOffenseCard->input5R == true)
+	{
+		if (inputList[4] == 'R')
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Combo Match"));
+			combo5Match = true;
+			
+		}
+		
+	}
+	
+
+	if (combo1Match == true)
+	{
+		comboMatch[0] = 1;
+	}
+	if (combo2Match == true)
+	{
+		comboMatch[1] = 1;
+	}
+	if (combo3Match == true)
+	{
+		comboMatch[2] = 1;
+	}
+	if (combo4Match == true)
+	{
+		comboMatch[3] = 1;
+	}
+	if (combo5Match == true)
+	{
+		comboMatch[4] = 1;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Combo match currently %d %d %d %d %d"), comboMatch[0], comboMatch[1], comboMatch[2], comboMatch[3], comboMatch[4]);
+
+	for (int i = 0; i < currentOffenseCard->inputNum; i++)
+	{
+		if (comboMatch[i] == 0)
+		{
+			executeCombo = 0;
+		}
+	}
+	//executeCombo = true;
+	
+	UE_LOG(LogTemp, Warning, TEXT("maxcombo is currently %d"), maxComboInputs);
+
+	if (executeCombo == 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Combo Executed"));
+		updateShooting();
+		clearInputList();
+	}
+
+}
+void AMyCharacter::clearInputList()
+{
+	for (int i = 0; i < 5; i++)
+	{
+		inputList[i] = '\0';
+	}
 }
 void AMyCharacter::attackForm()
 {
@@ -236,6 +445,22 @@ void AMyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	AMyProjectile* spawnedProj = Cast<AMyProjectile>(throwableProjectile);
 
+	
+	if (inputList[0] != '\0')
+	{
+		if (inputResetTimerCurrent < inputResetTimer)
+		{
+			inputResetTimerCurrent += DeltaTime;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Clearing input list"));
+			clearInputList();
+			inputResetTimerCurrent = 0.f;
+		}
+		checkCombo();
+	}
+
 	if (isShooting == true)
 	{
 		if (currentForm == 0)
@@ -289,7 +514,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::updateShooting);
+	//PlayerInputComponent->BindAction("Rock", IE_Pressed, this, &AMyCharacter::updateShooting);
+	PlayerInputComponent->BindAction("LeftInput", IE_Pressed, this, &AMyCharacter::addLeftInput);
+	PlayerInputComponent->BindAction("RightInput", IE_Pressed, this, &AMyCharacter::addRightInput);
 
 	PlayerInputComponent->BindAction("Attack Form", IE_Pressed, this, &AMyCharacter::attackForm);
 	PlayerInputComponent->BindAction("Defense Form", IE_Pressed, this, &AMyCharacter::defenseForm);
