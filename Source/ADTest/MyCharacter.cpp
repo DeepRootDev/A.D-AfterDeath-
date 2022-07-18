@@ -101,13 +101,14 @@ void AMyCharacter::Shoot()
 		//SetActorRotation({ 0.0, FollowCamera->GetComponentRotation().Yaw, 0.0 });
 
 
-	
+	if (currentForm == 0)
+	{
 		UE_LOG(LogTemp, Warning, TEXT("Cast is successful??"));
 		if (currentOffenseCard->quad1Spawn == true)
 		{
 			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad1->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
 		}
-		
+
 		if (currentOffenseCard->quad2Spawn == true)
 		{
 			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad2->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
@@ -120,6 +121,12 @@ void AMyCharacter::Shoot()
 		{
 			GetWorld()->SpawnActor<AMyProjectile>(actualProjectile, Quad4->GetComponentLocation(), { 20.0, FollowCamera->GetComponentRotation().Yaw, 0.0 })->setSpeed(currentOffenseCard->initialSpeed, currentOffenseCard->maxSpeed);
 		}
+	}
+	else if (currentForm == 1)
+	{
+		//Defense
+	}
+		
 	
 		
 		
