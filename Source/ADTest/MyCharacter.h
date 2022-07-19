@@ -46,6 +46,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		UCard* currentOffenseCard;
 
+	UPROPERTY(EditAnywhere)
+		UCard* currentDefenseCard;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<class AMyProjectile> actualProjectile;
 
@@ -118,7 +121,7 @@ public:
 	
 	void addRightInput();
 
-	void checkCombo();
+	void checkOffenseCombo();
 
 	void clearInputList();
 

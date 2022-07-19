@@ -27,6 +27,7 @@ AMyCharacter::AMyCharacter()
 	for (int i = 0; i < 5; i++)
 	{
 		inputList[i] = '\0';
+		
 	}
 
 	HitDetect = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hit Detect"));
@@ -126,11 +127,14 @@ void AMyCharacter::Shoot()
 	{
 		//Defense
 	}
-		
-	
-		
-		
-		//spawnedProjectile->Destroy();
+	else if (currentForm == 2)
+	{
+		//Flight
+	}
+	else if (currentForm == 3)
+	{
+		//Counter
+	}
 	
 	
 
@@ -173,7 +177,7 @@ void AMyCharacter::addRightInput()
 		}
 	}
 }
-void AMyCharacter::checkCombo()
+void AMyCharacter::checkOffenseCombo()
 {
 	
 	int comboMatch[5] = { 0, 0, 0, 0, 0 };
@@ -465,7 +469,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			clearInputList();
 			inputResetTimerCurrent = 0.f;
 		}
-		checkCombo();
+		checkOffenseCombo();
 	}
 
 	if (isShooting == true)
